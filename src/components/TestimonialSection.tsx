@@ -98,20 +98,21 @@ export default function TestimonialSection() {
   ];
 
   return (
-    <section className="py-20 bg-gray-900">
+    <section className="py-20" style={{ backgroundColor: '#482547' }}>
       <div className="container mx-auto px-6">
         {/* Section Header */}
         <div className="text-center mb-16">
           <BlurText
             text="What Our Clients Say"
-            delay={100}
+            delay={150}
             animateBy="words"
             direction="top"
             as="h2"
             className="text-5xl font-bold text-white mb-6 text-center w-full blur-text-title"
-            threshold={0.3}
-            animationFrom={{ filter: "blur(10px)", opacity: 0 }}
-            animationTo={{ filter: "blur(0px)", opacity: 1 }}
+            threshold={0.1}
+            rootMargin="0px 0px -10% 0px"
+            animationFrom={{ filter: "blur(10px)", opacity: 0, y: -20 }}
+            animationTo={[{ filter: "blur(0px)", opacity: 1, y: 0 }]}
             onAnimationComplete={() => console.log('Title animation completed!')}
           />
           <p className="text-xl text-gray-400 max-w-3xl mx-auto">
@@ -226,12 +227,23 @@ export default function TestimonialSection() {
         
         .relative::before {
           left: 0;
-          background: linear-gradient(to right, rgb(17, 24, 39), transparent);
+          background: linear-gradient(to right, #482547, transparent);
         }
         
         .relative::after {
           right: 0;
-          background: linear-gradient(to left, rgb(17, 24, 39), transparent);
+          background: linear-gradient(to left, #482547, transparent);
+        }
+        
+        /* Mobile adjustments - hide left gradient and reduce right gradient */
+        @media (max-width: 768px) {
+          .relative::before {
+            display: none; /* Hide left gradient on mobile */
+          }
+          
+          .relative::after {
+            width: 20px; /* Smaller right gradient on mobile */
+          }
         }
       `}</style>
     </section>

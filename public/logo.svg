@@ -1,5 +1,12 @@
-<svg width="140" height="32" viewBox="0 0 140 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <text x="0" y="24" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="currentColor">
-    Forward Minded
-  </text>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 166.01 167.06">
+  <g id="Layer_1-2" data-name="Layer 1">
+    <g id="_54bnfU" data-name="54bnfU">
+      <g>
+        <path d="M0,.05C2.06-.23,3.26.76,4.89,1.61c26.42,13.79,51.65,31.37,78.28,44.98,25.21-13.36,49.24-28.95,74.21-42.74,2.63-1.45,5.62-3.63,8.62-3.8v118.8l-21.87,13.42V58.7l-61.63,108.36v-47.22l42.74-72.07-42.83,23.4L2.43,24.95C-.74,21.84,1.8,8.33,1.04,3.44L0,1.04V.05Z"/>
+        <path d="M0,96.48c1.62-1.37,2.51-.16,3.86.55,5.71,2.99,10.89,7.21,17.01,9.39v24.85L1.48,120.35l-.44-20.48-1.04-2.4v-.99Z"/>
+        <polygon points="62.62 82.56 62.62 107.41 .99 72.62 .99 47.77 62.62 82.56"/>
+      </g>
+    </g>
+  </g>
 </svg>

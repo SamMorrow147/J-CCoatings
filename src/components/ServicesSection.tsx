@@ -2,6 +2,7 @@
 
 import SpotlightCard from "./SpotlightCard";
 import ServiceIcon from "./ServiceIcon";
+import BlurText from "./BlurText";
 
 export default function ServicesSection() {
   const services = [
@@ -50,11 +51,22 @@ export default function ServicesSection() {
   ];
 
   return (
-    <section className="py-20 bg-black">
+    <section className="py-20 bg-gradient-to-br from-slate-900 to-slate-800">
       <div className="container mx-auto px-6">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <h2 className="text-5xl font-bold text-white mb-6">Our Services</h2>
+          <BlurText
+            text="Our Services"
+            delay={150}
+            animateBy="words"
+            direction="top"
+            as="h2"
+            className="text-5xl font-bold text-white mb-6 text-center w-full"
+            threshold={0.1}
+            rootMargin="0px 0px -10% 0px"
+            animationFrom={{ filter: "blur(10px)", opacity: 0, y: -20 }}
+            animationTo={[{ filter: "blur(0px)", opacity: 1, y: 0 }]}
+          />
           <p className="text-xl text-gray-400 max-w-3xl mx-auto">
             Comprehensive marketing solutions designed to elevate your brand and drive meaningful results.
           </p>

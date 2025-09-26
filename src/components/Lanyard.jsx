@@ -124,6 +124,31 @@ function Band({ maxSpeed = 50, minSpeed = 0, lanyardPosition = [0, 4, 0] }) {
     }
   }, [hovered, dragged]);
 
+  // Disable scrolling when dragging on mobile
+  useEffect(() => {
+    if (dragged) {
+      // Prevent scrolling when dragging
+      document.body.style.overflow = 'hidden';
+      document.body.style.touchAction = 'none';
+      
+      // Prevent default touch events on the document
+      const preventTouch = (e) => {
+        e.preventDefault();
+      };
+      
+      document.addEventListener('touchmove', preventTouch, { passive: false });
+      document.addEventListener('touchstart', preventTouch, { passive: false });
+      
+      return () => {
+        // Re-enable scrolling when not dragging
+        document.body.style.overflow = '';
+        document.body.style.touchAction = '';
+        document.removeEventListener('touchmove', preventTouch);
+        document.removeEventListener('touchstart', preventTouch);
+      };
+    }
+  }, [dragged]);
+
   useEffect(() => {
     const handleResize = () => {
       setIsSmall(window.innerWidth < 1024);

@@ -1,8 +1,13 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import dynamic from 'next/dynamic';
 import Lanyard from "./Lanyard";
-import { SiReact, SiNextdotjs, SiTypescript, SiTailwindcss, SiNodedotjs, SiFigma, SiAdobe, SiGoogle } from 'react-icons/si';
+import BlurText from "./BlurText";
+import { SiReact, SiNextdotjs, SiTypescript, SiTailwindcss, SiNodedotjs, SiFigma } from 'react-icons/si';
+
+// Client-only marquee to avoid hydration issues
+const Marquee = dynamic(() => import('react-fast-marquee'), { ssr: false });
 
 export default function LanyardSection() {
   // Set lanyard position once on mount to avoid physics simulation issues
@@ -12,19 +17,18 @@ export default function LanyardSection() {
     }
     return [-2, 4, 0]; // Original position for larger screens
   });
-  // Technology logos for the loop
-  const techLogos = [
-    { node: <SiReact />, title: "React", href: "https://react.dev" },
-    { node: <SiNextdotjs />, title: "Next.js", href: "https://nextjs.org" },
-    { node: <SiTypescript />, title: "TypeScript", href: "https://www.typescriptlang.org" },
-    { node: <SiTailwindcss />, title: "Tailwind CSS", href: "https://tailwindcss.com" },
-    { node: <SiNodedotjs />, title: "Node.js", href: "https://nodejs.org" },
-    { node: <SiFigma />, title: "Figma", href: "https://figma.com" },
-    { node: <SiAdobe />, title: "Adobe Creative Suite", href: "https://adobe.com" },
-    { node: <SiGoogle />, title: "Google Analytics", href: "https://analytics.google.com" },
-  ];
+
+  // Stable logo array - memoized to prevent re-renders
+  const techLogos = useMemo(() => [
+    { icon: <SiReact />, name: "React" },
+    { icon: <SiNextdotjs />, name: "Next.js" },
+    { icon: <SiTypescript />, name: "TypeScript" },
+    { icon: <SiTailwindcss />, name: "Tailwind CSS" },
+    { icon: <SiNodedotjs />, name: "Node.js" },
+    { icon: <SiFigma />, name: "Figma" }
+  ], []);
   return (
-    <section className="h-screen bg-gradient-to-br from-slate-900 to-slate-800 relative overflow-visible">
+    <section className="h-screen bg-gradient-to-br from-slate-900 to-slate-800 relative overflow-visible pt-0 md:pt-16">
       {/* Full-width Lanyard container - spans entire section but hangs on left */}
       <div className="absolute inset-0 z-10 lanyard-container">
         <Lanyard 
@@ -43,7 +47,20 @@ export default function LanyardSection() {
         <div style={{ width: '58%' }} className="flex flex-col justify-center pl-16 mobile-center-content">
           {/* Top section - Text and Button */}
           <div className="text-left max-w-lg mb-12 mt-12">
-            <h2 className="text-white text-4xl font-bold">About Us</h2>
+            <BlurText
+              text="About Us"
+              delay={150}
+              animateBy="words"
+              direction="top"
+              as="h2"
+              className="text-white text-4xl font-bold mb-4"
+              threshold={0.1}
+              rootMargin="0px 0px -10% 0px"
+              animationFrom={{ filter: "blur(10px)", opacity: 0, y: -20 }}
+              animationTo={[{ filter: "blur(0px)", opacity: 1, y: 0 }]}
+              textAlign="left"
+              style={{ width: '100%' }}
+            />
             <p className="text-gray-300 text-lg mb-8 leading-relaxed">
               Forward Minded Media is a full-service marketing agency, with the belief that marketing should be a true partnership, not just another expense. We help businesses leave the status quo behind by delivering creative, impactful solutions that drive real growth.
             </p>
@@ -54,17 +71,27 @@ export default function LanyardSection() {
             </button>
           </div>
           
-          {/* Bottom section - Simple Logo Scroll */}
-          <div className="max-w-lg">
-            <div className="h-16 overflow-hidden relative">
-              <div className="absolute top-0 left-0 flex items-center h-full animate-logo-scroll">
-                {techLogos.concat(techLogos).map((logo, index) => (
-                  <div key={index} className="flex-shrink-0 text-white text-4xl mx-4">
-                    {logo.node}
-                  </div>
-                ))}
-              </div>
-            </div>
+          {/* Bottom section - Tech Logos */}
+          <div className="w-full max-w-lg overflow-hidden">
+            <Marquee 
+              gradient={false} 
+              speed={60} 
+              pauseOnHover={true}
+              className="py-4"
+            >
+              {techLogos.map((logo, index) => (
+                <div 
+                  key={`${logo.name}-${index}`}
+                  className={`flex items-center justify-center text-5xl ${
+                    index === techLogos.length - 1 ? 'ml-6 mr-12' : 'mx-6'
+                  }`}
+                  style={{ color: '#f9ba40' }}
+                  title={logo.name}
+                >
+                  {logo.icon}
+                </div>
+              ))}
+            </Marquee>
           </div>
         </div>
       </div>
@@ -118,26 +145,6 @@ export default function LanyardSection() {
           transform: translateY(0) scale(1);
           background: rgba(255, 255, 255, 0.25);
         }
-        
-        /* Simple logo scroll animation - NO GLITCHES */
-        @keyframes logo-scroll {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-        
-        .animate-logo-scroll {
-          animation: logo-scroll 8s linear infinite;
-          width: max-content;
-        }
-        
-        .animate-logo-scroll:hover {
-          animation-play-state: paused;
-        }
-        
         
         /* Mobile responsive styles */
         @media (max-width: 768px) {
@@ -228,7 +235,7 @@ export default function LanyardSection() {
           }
           
           /* Move logo section down on mobile to align with lanyard bottom */
-          .mobile-center-content .logo-loop-container {
+          .mobile-center-content .max-w-lg:last-child {
             margin-top: 4rem !important;
           }
         }
@@ -245,7 +252,7 @@ export default function LanyardSection() {
           }
           
           /* Adjust logo positioning for smaller screens */
-          .mobile-center-content .logo-loop-container {
+          .mobile-center-content .max-w-lg:last-child {
             margin-top: 3rem !important;
           }
         }

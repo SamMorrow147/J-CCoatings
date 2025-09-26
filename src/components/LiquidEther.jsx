@@ -195,6 +195,7 @@ export default function LiquidEther({
           if (this.onInteract) this.onInteract();
           this.setCoords(t.pageX, t.pageY);
           this.hasUserControl = true;
+          // Don't prevent default to allow scrolling
         }
       }
       onDocumentTouchMove(event) {
@@ -202,6 +203,7 @@ export default function LiquidEther({
           const t = event.touches[0];
           if (this.onInteract) this.onInteract();
           this.setCoords(t.pageX, t.pageY);
+          // Don't prevent default to allow scrolling
         }
       }
       onTouchEnd() {

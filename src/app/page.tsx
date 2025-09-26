@@ -5,6 +5,8 @@ import LanyardSection from "@/components/LanyardSection";
 import TrueFocusSection from "@/components/TrueFocusSection";
 import ServicesSection from "@/components/ServicesSection";
 import TestimonialSection from "@/components/TestimonialSection";
+import LogoSection from "@/components/LogoSection";
+import Footer from "@/components/Footer";
 import GradualBlur from "@/components/GradualBlur";
 import StaggeredMenu from "@/components/StaggeredMenu";
 import AdobeFonts from "@/components/AdobeFonts";
@@ -53,9 +55,8 @@ export default function Home() {
       <TrueFocusSection />
       <ServicesSection />
       <TestimonialSection />
-      <main className="bg-gray-50">
-        {/* Main content area - now empty and clean */}
-      </main>
+      <LogoSection />
+      <Footer />
       
       {/* Global page-level blur effect at the bottom of the screen */}
       <GradualBlur

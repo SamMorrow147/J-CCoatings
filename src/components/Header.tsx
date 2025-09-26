@@ -8,11 +8,11 @@ export default function Header() {
     <div className="relative h-[85vh] w-full bg-black">
       {/* Solid black background - using bg-black on the container itself */}
       
-      {/* Dark purple background layer behind interactive effect */}
-      <div className="absolute inset-0 bg-purple-950 z-0"></div>
+      {/* Custom purple background layer behind interactive effect */}
+      <div className="absolute inset-0 z-0" style={{ backgroundColor: '#7c3f7b' }}></div>
       
       {/* Liquid Ether effect layer - now on top but behind text */}
-      <div className="absolute inset-0 z-10">
+      <div className="absolute inset-0 z-10 animate-fade-in-background">
         <LiquidEther resolution={0.4} isBounce={true} />
       </div>
       
@@ -30,6 +30,8 @@ export default function Header() {
                 from={{ opacity: 0, y: 50 }}
                 to={{ opacity: 1, y: 0 }}
                 textAlign="center"
+                immediate={true}
+                startDelay={0.8}
                 onLetterAnimationComplete={() => {}}
               />
               <p className="text-white/80 text-xl font-light tracking-wide opacity-0 animate-fade-in-delayed mb-8" style={{ fontFamily: '"halcom", sans-serif', fontWeight: 400, fontStyle: 'normal' }}>
@@ -44,6 +46,20 @@ export default function Header() {
               </div>
               
               <style jsx>{`
+                @keyframes fadeInBackground {
+                  0% {
+                    opacity: 0;
+                  }
+                  100% {
+                    opacity: 1;
+                  }
+                }
+                
+                .animate-fade-in-background {
+                  opacity: 0;
+                  animation: fadeInBackground 0.6s ease-out 0.2s forwards;
+                }
+                
                 @keyframes fadeInDelayed {
                   0% {
                     opacity: 0;

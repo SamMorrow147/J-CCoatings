@@ -94,7 +94,7 @@ export const StaggeredMenu = ({
     const socialTitle = panel.querySelector('.sm-socials-title');
     const socialLinks = Array.from(panel.querySelectorAll('.sm-socials-link'));
 
-    const layerStates = layers.map(el => ({ el, start: Number(gsap.getProperty(el, 'xPercent')) }));
+    const layerStates = layers && Array.isArray(layers) ? layers.map(el => ({ el, start: Number(gsap.getProperty(el, 'xPercent')) })) : [];
     const panelStart = Number(gsap.getProperty(panel, 'xPercent'));
 
     if (itemEls.length) {
@@ -113,7 +113,8 @@ export const StaggeredMenu = ({
     const tl = gsap.timeline({ paused: true });
 
     console.log('Layer states:', layerStates);
-    layerStates.forEach((ls, i) => {
+    if (layerStates.length > 0) {
+      layerStates.forEach((ls, i) => {
       console.log(`Animating layer ${i} from ${ls.start}% to 0%`);
       // Overlapping animations for smoother flow
       const startTime = i * 0.06; // Smaller delay for tighter sequence
@@ -127,7 +128,8 @@ export const StaggeredMenu = ({
         }, 
         startTime
       );
-    });
+      });
+    }
     const lastTime = layerStates.length ? (layerStates.length - 1) * 0.06 : 0;
     const panelInsertTime = lastTime + 0.12;
     const panelDuration = 0.65;
@@ -230,7 +232,7 @@ export const StaggeredMenu = ({
     const layers = preLayerElsRef.current;
     if (!panel) return;
 
-    const all = [...layers, panel];
+    const all = layers && Array.isArray(layers) ? [...layers, panel] : [panel];
     closeTweenRef.current?.kill();
     const offscreen = position === 'left' ? -100 : 100;
     closeTweenRef.current = gsap.to(all, {
@@ -359,9 +361,8 @@ export const StaggeredMenu = ({
           // Create multiple layers for staggered effect
           const layerColors = [
             '#f9ba40', // First shape - orange/yellow
-            '#884582', // Second shape - purple  
-            '#5227FF', // Dark purple
-            '#3D1BDB'  // Darkest purple
+            '#7c3f7b', // Second shape - purple (matching your brand)
+            '#ffffff'  // Final shape - white background
           ];
           
           return layerColors.map((color, i) => (
@@ -370,7 +371,7 @@ export const StaggeredMenu = ({
               className="sm-prelayer" 
               style={{ 
                 background: color,
-                opacity: 0.85,
+                opacity: i === layerColors.length - 1 ? 1 : 0.9, // Full opacity for white background
                 zIndex: 999 - i
               }} 
             />

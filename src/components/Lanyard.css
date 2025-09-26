@@ -10,6 +10,7 @@
   transform-origin: center;
   pointer-events: auto;
   overflow: visible !important;
+  touch-action: manipulation;
 }
 
 .lanyard-wrapper canvas {

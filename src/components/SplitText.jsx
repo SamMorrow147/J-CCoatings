@@ -19,11 +19,14 @@ const SplitText = ({
   rootMargin = '-100px',
   textAlign = 'center',
   tag = 'p',
+  immediate = false, // New prop to trigger animation immediately
+  startDelay = 0, // Delay before the entire animation sequence starts
   onLetterAnimationComplete
 }) => {
   const ref = useRef(null);
   const animationCompletedRef = useRef(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     if (document.fonts.status === 'loaded') {
@@ -79,29 +82,37 @@ const SplitText = ({
         reduceWhiteSpace: false,
         onSplit: self => {
           assignTargets(self);
-          const tween = gsap.fromTo(
-            targets,
-            { ...from },
-            {
-              ...to,
-              duration,
-              ease,
-              stagger: delay / 1000,
-              scrollTrigger: {
-                trigger: el,
-                start,
-                once: true,
-                fastScrollEnd: true,
-                anticipatePin: 0.4
-              },
-              onComplete: () => {
-                animationCompletedRef.current = true;
-                onLetterAnimationComplete?.();
-              },
-              willChange: 'transform, opacity',
-              force3D: true
-            }
-          );
+          // Set the text as ready once GSAP has split it
+          setIsReady(true);
+          
+          const animationConfig = {
+            ...to,
+            duration,
+            ease,
+            stagger: delay / 1000,
+            onComplete: () => {
+              animationCompletedRef.current = true;
+              onLetterAnimationComplete?.();
+            },
+            willChange: 'transform, opacity',
+            force3D: true
+          };
+
+          // Add ScrollTrigger only if not immediate
+          if (!immediate) {
+            animationConfig.scrollTrigger = {
+              trigger: el,
+              start,
+              once: true,
+              fastScrollEnd: true,
+              anticipatePin: 0.4
+            };
+          } else {
+            // For immediate animations, add the startDelay plus a small delay to ensure DOM is ready
+            animationConfig.delay = startDelay + 0.1;
+          }
+
+          const tween = gsap.fromTo(targets, { ...from }, animationConfig);
           return tween;
         }
       });
@@ -145,7 +156,9 @@ const SplitText = ({
       display: 'inline-block',
       whiteSpace: 'normal',
       wordWrap: 'break-word',
-      willChange: 'transform, opacity'
+      willChange: 'transform, opacity',
+      // Hide text initially until GSAP splits it and is ready to animate
+      visibility: (fontsLoaded && isReady) ? 'visible' : 'hidden'
     };
     const classes = `split-parent ${className}`;
     switch (tag) {

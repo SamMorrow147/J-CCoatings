@@ -30,3 +30,4 @@ declare module '@/components/StaggeredMenu' {
   const StaggeredMenu: React.FC<StaggeredMenuProps>;
   export default StaggeredMenu;
 }
+

@@ -4,11 +4,12 @@ import { useEffect, useRef, useState, useMemo } from 'react';
 const buildKeyframes = (from, steps) => {
   // Ensure steps is an array and handle server-side rendering
   const safeSteps = Array.isArray(steps) ? steps : [];
-  const keys = new Set([...Object.keys(from || {}), ...safeSteps.flatMap(s => Object.keys(s || {}))]);
+  const safeFrom = from || {};
+  const keys = new Set([...Object.keys(safeFrom), ...safeSteps.flatMap(s => Object.keys(s || {}))]);
 
   const keyframes = {};
   keys.forEach(k => {
-    keyframes[k] = [from?.[k], ...safeSteps.map(s => s?.[k])];
+    keyframes[k] = [safeFrom[k], ...safeSteps.map(s => s?.[k] ?? safeFrom[k])];
   });
   return keyframes;
 };
@@ -27,6 +28,7 @@ const BlurText = ({
   onAnimationComplete,
   stepDuration = 0.35,
   as = 'p',
+  textAlign = 'center',
   style = {}
 }) => {
   const elements = animateBy === 'words' ? text.split(' ') : text.split('');
@@ -35,17 +37,31 @@ const BlurText = ({
 
   useEffect(() => {
     if (!ref.current) return;
+    const element = ref.current;
+    
     const observer = new IntersectionObserver(
       ([entry]) => {
+        console.log('BlurText intersection:', {
+          isIntersecting: entry.isIntersecting,
+          intersectionRatio: entry.intersectionRatio,
+          text: text.substring(0, 20)
+        });
         if (entry.isIntersecting) {
+          console.log('BlurText triggering animation for:', text);
           setInView(true);
-          observer.unobserve(ref.current);
+          observer.unobserve(element);
         }
       },
-      { threshold, rootMargin }
+      { 
+        threshold: Math.max(0.1, threshold), 
+        rootMargin: rootMargin || '0px 0px -50% 0px' // Trigger earlier when element is 50% into viewport
+      }
     );
-    observer.observe(ref.current);
-    return () => observer.disconnect();
+    
+    observer.observe(element);
+    return () => {
+      observer.disconnect();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [threshold, rootMargin]);
 
@@ -68,7 +84,7 @@ const BlurText = ({
   );
 
   const fromSnapshot = animationFrom ?? defaultFrom;
-  const toSnapshots = animationTo ?? defaultTo;
+  const toSnapshots = Array.isArray(animationTo) ? animationTo : defaultTo;
 
   const stepCount = toSnapshots.length + 1;
   const totalDuration = stepDuration * (stepCount - 1);
@@ -78,23 +94,29 @@ const BlurText = ({
   const Component = as;
 
   return (
-    <Component ref={ref} className={className} style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', width: '100%', ...style }}>
+    <Component ref={ref} className={className} style={{ 
+      display: 'flex', 
+      flexWrap: 'wrap', 
+      justifyContent: textAlign === 'left' ? 'flex-start' : textAlign === 'right' ? 'flex-end' : 'center', 
+      width: '100%', 
+      ...style 
+    }}>
       {elements.map((segment, index) => {
-        const animateKeyframes = buildKeyframes(fromSnapshot, toSnapshots);
-
+        // For simple single-step animations, use the final state directly
+        const finalState = Array.isArray(toSnapshots) && toSnapshots.length === 1 ? toSnapshots[0] : toSnapshots[toSnapshots.length - 1] || {};
+        
         const spanTransition = {
           duration: totalDuration,
-          times,
-          delay: (index * delay) / 1000
+          delay: (index * delay) / 1000,
+          ease: easing
         };
-        spanTransition.ease = easing;
 
         return (
           <motion.span
             className="inline-block will-change-[transform,filter,opacity]"
             key={index}
             initial={fromSnapshot}
-            animate={inView ? animateKeyframes : fromSnapshot}
+            animate={inView ? finalState : fromSnapshot}
             transition={spanTransition}
             onAnimationComplete={index === elements.length - 1 ? onAnimationComplete : undefined}
             style={{ fontFamily: 'inherit', fontWeight: 'inherit', fontStyle: 'inherit' }}

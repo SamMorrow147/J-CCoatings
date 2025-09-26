@@ -131,6 +131,27 @@
   transition: opacity 0.75s ease-in-out;
 }
 
+/* Show glow effects when animating (scroll-triggered on mobile) */
+.card-spotlight.animating::after,
+.card-spotlight.animating > .glow-border {
+  opacity: calc((var(--pointer-distance) - var(--glow-sens)) / (100 - var(--glow-sens)));
+  transition: opacity 0.25s ease-out;
+}
+
+/* Mobile-specific adjustments for scroll-triggered glow */
+@media (max-width: 768px) {
+  .card-spotlight.animating::after,
+  .card-spotlight.animating > .glow-border {
+    opacity: calc((var(--pointer-distance) - var(--glow-sens)) / (100 - var(--glow-sens)));
+    transition: opacity 0.15s ease-out;
+  }
+  
+  /* Slightly more sensitive glow trigger on mobile */
+  .card-spotlight {
+    --glow-sens: 25;
+  }
+}
+
 /* Content wrapper */
 .card-spotlight .card-content {
   position: relative;
