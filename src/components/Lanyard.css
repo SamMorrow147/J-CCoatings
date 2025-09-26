@@ -25,6 +25,8 @@
     left: -5% !important;
     overflow: visible !important;
     transform: scale(1) !important;
+    align-items: flex-end !important; /* Position camera guy at bottom */
+    padding-bottom: 0 !important; /* Remove any bottom padding */
   }
   
   .lanyard-wrapper canvas {

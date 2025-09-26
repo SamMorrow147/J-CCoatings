@@ -4,7 +4,7 @@ import TrueFocus from "./TrueFocus";
 
 export default function TrueFocusSection() {
   return (
-    <section className="py-16 bg-white flex items-center justify-center">
+    <section className="pt-16 pb-0 bg-white flex items-center justify-center">
       <div className="w-full max-w-7xl mx-auto px-8 flex flex-col md:flex-row">
         {/* Text Content - Full width on mobile, left column on desktop */}
         <div className="w-full md:w-1/2 flex items-center justify-center md:justify-end md:pr-12 mb-8 md:mb-0">
@@ -28,7 +28,7 @@ export default function TrueFocusSection() {
         </div>
         
         {/* Focus Image - Full width on mobile, right column on desktop */}
-        <div className="w-full md:w-1/2 flex flex-col justify-end md:pl-12 md:-mb-16">
+        <div className="w-full md:w-1/2 flex flex-col justify-end md:pl-12">
           <div className="w-full h-64 md:h-96">
             <img 
               src="/Focus-Image.png" 
