@@ -2,11 +2,13 @@ import { motion } from 'motion/react';
 import { useEffect, useRef, useState, useMemo } from 'react';
 
 const buildKeyframes = (from, steps) => {
-  const keys = new Set([...Object.keys(from), ...steps.flatMap(s => Object.keys(s))]);
+  // Ensure steps is an array and handle server-side rendering
+  const safeSteps = Array.isArray(steps) ? steps : [];
+  const keys = new Set([...Object.keys(from || {}), ...safeSteps.flatMap(s => Object.keys(s || {}))]);
 
   const keyframes = {};
   keys.forEach(k => {
-    keyframes[k] = [from[k], ...steps.map(s => s[k])];
+    keyframes[k] = [from?.[k], ...safeSteps.map(s => s?.[k])];
   });
   return keyframes;
 };
