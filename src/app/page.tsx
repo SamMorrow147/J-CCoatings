@@ -8,7 +8,6 @@ import ServicesSection from "@/components/ServicesSection";
 import TestimonialSection from "@/components/TestimonialSection";
 import LogoSection from "@/components/LogoSection";
 import Footer from "@/components/Footer";
-import GradualBlur from "@/components/GradualBlur";
 import StaggeredMenu from "@/components/StaggeredMenu";
 import AdobeFonts from "@/components/AdobeFonts";
 
@@ -59,18 +58,6 @@ export default function Home() {
       <TestimonialSection />
       {/* <LogoSection /> */}
       <Footer />
-      
-      {/* Global page-level blur effect at the bottom of the screen */}
-      <GradualBlur
-        target="page"
-        position="bottom"
-        height="8rem"
-        strength={3}
-        divCount={6}
-        curve="bezier"
-        exponential={true}
-        opacity={1}
-      />
     </div>
   );
 }
