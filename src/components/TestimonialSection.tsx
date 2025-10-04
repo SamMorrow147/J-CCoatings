@@ -64,10 +64,31 @@ export default function TestimonialSection() {
   // Spray effect setup
   useEffect(() => {
     setCanvasWidth(window.innerWidth);
-    const handleResize = () => setCanvasWidth(window.innerWidth);
+    
+    let resizeTimeout: NodeJS.Timeout;
+    const handleResize = () => {
+      setCanvasWidth(window.innerWidth);
+      
+      // Reset and restart spray on resize after a short delay
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        if (hasStarted) {
+          topRef.current?.reset();
+          bottomRef.current?.reset();
+          setTimeout(() => {
+            topRef.current?.start();
+            bottomRef.current?.start();
+          }, 100);
+        }
+      }, 300); // Wait 300ms after resize stops
+    };
+    
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimeout);
+    };
+  }, [hasStarted]);
 
   useEffect(() => {
     if (!sectionRef.current) return;

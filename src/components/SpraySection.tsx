@@ -14,13 +14,30 @@ export default function SpraySection() {
     // Set width after hydration to avoid mismatch
     setCanvasWidth(window.innerWidth);
     
+    let resizeTimeout: NodeJS.Timeout;
     const handleResize = () => {
       setCanvasWidth(window.innerWidth);
+      
+      // Reset and restart spray on resize after a short delay
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        if (hasStarted) {
+          topRef.current?.reset();
+          bottomRef.current?.reset();
+          setTimeout(() => {
+            topRef.current?.start();
+            bottomRef.current?.start();
+          }, 100);
+        }
+      }, 300); // Wait 300ms after resize stops
     };
     
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimeout);
+    };
+  }, [hasStarted]);
 
   // Start spray animation when section comes into view
   useEffect(() => {
