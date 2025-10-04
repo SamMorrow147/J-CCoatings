@@ -161,17 +161,17 @@
     pointer-events: none; /* Canvas is display only */
   }
   
-  /* Proxima Nova Extrabold for all titles */
+  /* Scandia Stencil for all titles */
   h1, h2, h3, h4, h5, h6 {
-    font-family: "proxima-nova", sans-serif !important;
-    font-weight: 800 !important;
+    font-family: "scandia-web-stencil", sans-serif !important;
+    font-weight: 700 !important;
     font-style: normal !important;
   }
   
   /* SplitText specific styling */
   .split-parent, .split-char, .split-word, .split-line {
-    font-family: "proxima-nova", sans-serif !important;
-    font-weight: 800 !important;
+    font-family: "scandia-web-stencil", sans-serif !important;
+    font-weight: 700 !important;
     font-style: normal !important;
   }
   
