@@ -71,6 +71,11 @@ export default function TestimonialSection() {
 
   useEffect(() => {
     if (!sectionRef.current) return;
+    
+    // Use lower threshold for mobile devices
+    const isMobile = window.innerWidth <= 768;
+    const threshold = isMobile ? 0.1 : 0.7; // 10% on mobile, 70% on desktop
+    
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !hasStarted) {
@@ -81,7 +86,7 @@ export default function TestimonialSection() {
           setHasStarted(true);
         }
       },
-      { threshold: 0.9 }
+      { threshold }
     );
     observer.observe(sectionRef.current);
     return () => observer.disconnect();

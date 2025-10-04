@@ -26,6 +26,10 @@ export default function SpraySection() {
   useEffect(() => {
     if (!sectionRef.current) return;
 
+    // Use lower threshold for mobile devices
+    const isMobile = window.innerWidth <= 768;
+    const threshold = isMobile ? 0.1 : 0.7; // 10% on mobile, 70% on desktop
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !hasStarted) {
@@ -36,7 +40,7 @@ export default function SpraySection() {
           setHasStarted(true);
         }
       },
-      { threshold: 0.9 } // Wait until 90% of section is in view
+      { threshold }
     );
 
     observer.observe(sectionRef.current);
