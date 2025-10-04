@@ -16,18 +16,34 @@ export default function SpraySection() {
     const checkMobile = window.innerWidth <= 768;
     setIsMobile(checkMobile);
     // Use document.documentElement.clientWidth to get accurate viewport width
-    const viewportWidth = Math.min(window.innerWidth, document.documentElement.clientWidth);
+    const viewportWidth = Math.min(
+      window.innerWidth, 
+      document.documentElement.clientWidth,
+      document.body.clientWidth
+    );
     setCanvasWidth(viewportWidth);
     
+    let resizeTimer: NodeJS.Timeout;
     const handleResize = () => {
-      const mobile = window.innerWidth <= 768;
-      setIsMobile(mobile);
-      const viewportWidth = Math.min(window.innerWidth, document.documentElement.clientWidth);
-      setCanvasWidth(viewportWidth);
+      // Debounce resize to prevent it from firing during scroll
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        const mobile = window.innerWidth <= 768;
+        setIsMobile(mobile);
+        const viewportWidth = Math.min(
+          window.innerWidth, 
+          document.documentElement.clientWidth,
+          document.body.clientWidth
+        );
+        setCanvasWidth(viewportWidth);
+      }, 150);
     };
     
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize, { passive: true });
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimer);
+    };
   }, []);
 
   // Start spray animation when section comes into view
@@ -54,15 +70,15 @@ export default function SpraySection() {
     return () => observer.disconnect();
   }, [hasStarted, isMobile]);
 
-  // Mobile-optimized settings: Much faster sweep, fewer particles
+  // Mobile-optimized settings: Fewer particles for performance
   const flowRate = isMobile ? 25000 : 80000; // ~70% less particles on mobile
-  const nozzleRadius = isMobile ? 6 : 8; // Slightly tighter spray on mobile
-  const sweepSpeed = isMobile ? 3500 : 2400; // Much faster on mobile (~45% faster)
+  const nozzleRadius = 8;
+  const sweepSpeed = 2400; // Same speed on all devices
   const color = "#ffffff";
-  const dropletSize = isMobile ? 2.0 : 2.5; // Slightly smaller droplets on mobile
-  const solidAnimationDuration = isMobile ? '0.5s' : '1.0s'; // Faster fill animation on mobile
-  const canvasHeight = isMobile ? 180 : 240; // Reduced canvas height on mobile
-  const bandHeight = isMobile ? 90 : 120; // Reduced visible band height on mobile
+  const dropletSize = 2.5; // Same size on all devices
+  const solidAnimationDuration = '1.0s'; // Same duration on all devices
+  const canvasHeight = 240; // Same height on all devices
+  const bandHeight = 120; // Same visible band on all devices
 
   return (
     <div ref={sectionRef} style={{ 
@@ -74,7 +90,8 @@ export default function SpraySection() {
       width: '100%',
       maxWidth: '100vw',
       overflow: 'hidden',
-      position: 'relative'
+      position: 'relative',
+      touchAction: 'pan-y' // Allow vertical scroll only, prevent zoom
     }}>
       {/* Top Spray Band - Only show top half */}
       <div style={{ 
@@ -123,7 +140,7 @@ export default function SpraySection() {
         overflow: 'hidden',
         width: '100%',
         maxWidth: '100%',
-        minHeight: isMobile ? '400px' : '500px',
+        minHeight: '500px',
         padding: isMobile ? '40px 20px' : '80px 40px'
       }}>
         {/* Animated color box */}
@@ -148,13 +165,14 @@ export default function SpraySection() {
         <div style={{ 
           position: 'relative', 
           zIndex: 10, 
-          maxWidth: isMobile ? '600px' : '1200px', 
-          textAlign: 'center'
+          maxWidth: '1200px', 
+          textAlign: 'center',
+          padding: isMobile ? '0 10px' : '0'
         }}>
           <h2 style={{ 
-            fontSize: isMobile ? '2rem' : '3.5rem', 
+            fontSize: isMobile ? '2.25rem' : '3.5rem', 
             fontWeight: '900', 
-            margin: isMobile ? '0 0 16px 0' : '0 0 24px 0', 
+            margin: '0 0 24px 0', 
             color: '#236292',
             fontFamily: '"proxima-nova", sans-serif',
             lineHeight: '1.2'
@@ -162,10 +180,10 @@ export default function SpraySection() {
             Quality Craftsmanship
           </h2>
           <p style={{ 
-            fontSize: isMobile ? '1rem' : '1.5rem', 
+            fontSize: isMobile ? '1.125rem' : '1.5rem', 
             color: '#1a4d6b', 
             lineHeight: '1.6', 
-            margin: isMobile ? '0 0 28px 0' : '0 0 40px 0' 
+            margin: '0 0 40px 0'
           }}>
             Every project starts with precision and ends with perfection. Our professional painting services bring your vision to life with expert application and attention to detail.
           </p>

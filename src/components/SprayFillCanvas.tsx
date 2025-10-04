@@ -330,11 +330,19 @@ const SprayFillCanvas = forwardRef<SprayFillHandle, SprayFillProps>(function Spr
   }, [resizeAndInit]);
 
   useEffect(() => {
+    let resizeTimer: NodeJS.Timeout;
     const onResize = () => {
-      resizeAndInit();
+      // Debounce resize to prevent excessive calls during scroll
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        resizeAndInit();
+      }, 150);
     };
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+    window.addEventListener("resize", onResize, { passive: true });
+    return () => {
+      window.removeEventListener("resize", onResize);
+      clearTimeout(resizeTimer);
+    };
   }, [resizeAndInit]);
 
   // Imperative API
@@ -388,7 +396,10 @@ const SprayFillCanvas = forwardRef<SprayFillHandle, SprayFillProps>(function Spr
         width: `${width}px`,
         maxWidth: "100%",
         height: `${height}px`,
-        margin: "0 auto"
+        margin: "0 auto",
+        transform: "translateZ(0)", // Force GPU acceleration, prevent scaling issues
+        WebkitTransform: "translateZ(0)",
+        willChange: "auto" // Don't hint at transforms
       }}
     />
   );
