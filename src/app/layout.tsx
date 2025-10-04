@@ -34,11 +34,8 @@ export default function RootLayout({
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        style={{ position: 'fixed', width: '100%', height: '100%', overflow: 'auto' }}
       >
-        <div style={{ minHeight: '100vh', width: '100%' }}>
-          {children}
-        </div>
+        {children}
       </body>
     </html>
   );
