@@ -10,7 +10,7 @@ export default function AdobeFonts() {
     link1.href = 'https://use.typekit.net/qhq4tmi.css';
     document.head.appendChild(link1);
 
-    // Create and inject the second Adobe Fonts CSS link (Social Gothic Stencil)
+    // Create and inject the second Adobe Fonts CSS link (Scandia Stencil)
     const link2 = document.createElement('link');
     link2.rel = 'stylesheet';
     link2.href = 'https://use.typekit.net/fju6rnv.css';

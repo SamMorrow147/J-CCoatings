@@ -161,16 +161,16 @@
     pointer-events: none; /* Canvas is display only */
   }
   
-  /* Social Gothic Stencil for all titles */
+  /* Scandia Stencil for all titles */
   h1, h2, h3, h4, h5, h6 {
-    font-family: "social-gothic-stencil", sans-serif !important;
+    font-family: "scandia-web-stencil", sans-serif !important;
     font-weight: 700 !important;
     font-style: normal !important;
   }
   
   /* SplitText specific styling */
   .split-parent, .split-char, .split-word, .split-line {
-    font-family: "social-gothic-stencil", sans-serif !important;
+    font-family: "scandia-web-stencil", sans-serif !important;
     font-weight: 700 !important;
     font-style: normal !important;
   }
