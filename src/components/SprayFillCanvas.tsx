@@ -307,13 +307,15 @@ const SprayFillCanvas = forwardRef<SprayFillHandle, SprayFillProps>(function Spr
     };
   }, [resizeAndInit]);
 
-  useEffect(() => {
-    const onResize = () => {
-      resizeAndInit();
-    };
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, [resizeAndInit]);
+  // Disable resize handler to prevent canvas clearing on mobile scroll
+  // The canvas width is controlled by parent component state
+  // useEffect(() => {
+  //   const onResize = () => {
+  //     resizeAndInit();
+  //   };
+  //   window.addEventListener("resize", onResize);
+  //   return () => window.removeEventListener("resize", onResize);
+  // }, [resizeAndInit]);
 
   // Imperative API
   useImperativeHandle(ref, () => ({

@@ -22,7 +22,7 @@ export default function SpraySection() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Start spray animation when section comes into view
+  // Start spray animation when section comes into view - keep observing
   useEffect(() => {
     if (!sectionRef.current) return;
 
@@ -39,6 +39,7 @@ export default function SpraySection() {
           }, 200);
           setHasStarted(true);
         }
+        // Keep the spray visible - don't pause or clear when scrolling away
       },
       { threshold }
     );
