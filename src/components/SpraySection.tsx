@@ -54,7 +54,7 @@ export default function SpraySection() {
   const sweepSpeed = isMobile ? 1200 : 2400; // Half speed on mobile (narrower screen)
   const color = "#ffffff"; // White spray
   const dropletSize = 2.5; // Smaller dots for smoother blend
-  const solidAnimationDuration = isMobile ? '2.0s' : '1.0s'; // Slower on mobile to match spray
+  const solidAnimationDuration = isMobile ? '0.6s' : '1.0s'; // Much faster on mobile
 
   return (
     <div ref={sectionRef} style={{ fontFamily: "system-ui, sans-serif", margin: 0, padding: 0, display: 'flex', flexDirection: 'column' }}>

@@ -103,7 +103,7 @@ export default function TestimonialSection() {
   const sweepSpeed = isMobile ? 1200 : 2400; // Half speed on mobile (narrower screen)
   const sprayColor = "#ffffff";
   const dropletSize = 2.5;
-  const solidAnimationDuration = isMobile ? '2.0s' : '1.0s'; // Slower on mobile to match spray
+  const solidAnimationDuration = isMobile ? '0.6s' : '1.0s'; // Much faster on mobile
   
   const testimonials = [
     {
