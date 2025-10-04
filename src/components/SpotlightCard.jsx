@@ -101,17 +101,17 @@ const SpotlightCard = ({ children, className = '', spotlightColor = 'rgba(255, 2
 
     // Calculate position along the right edge based on scroll progress
     const rect = card.getBoundingClientRect();
-    const x = rect.width * 0.9; // 90% to the right (near right edge)
+    const x = rect.width * 0.95; // 95% to the right (very close to right edge)
     const y = rect.height * scrollProgress; // Vertical position based on scroll
 
     // Calculate glow effect parameters
     const [dx, dy] = distanceFromCenter(card, x, y);
-    const edge = closenessToEdge(card, x, y);
+    const edge = Math.max(0.7, closenessToEdge(card, x, y)); // Ensure minimum edge value
     const angle = angleFromPointerEvent(card, dx, dy);
     const perx = (x / rect.width) * 100;
     const pery = (y / rect.height) * 100;
 
-    // Apply the glow effect
+    // Apply the glow effect with stronger values for mobile
     card.style.setProperty('--pointer-x', `${round(perx)}%`);
     card.style.setProperty('--pointer-y', `${round(pery)}%`);
     card.style.setProperty('--pointer-angle', `${round(angle)}deg`);
@@ -145,36 +145,32 @@ const SpotlightCard = ({ children, className = '', spotlightColor = 'rgba(255, 2
       const windowHeight = window.innerHeight;
       
       // Check if card is in viewport
-      if (rect.bottom < 0 || rect.top > windowHeight) {
+      if (rect.bottom < 50 || rect.top > windowHeight - 50) {
         // Card is out of view, remove glow
         card.classList.remove('animating');
         return;
       }
 
-      // Calculate scroll progress (0 to 1) based on card's position in viewport
-      const cardCenter = rect.top + rect.height / 2;
-      const viewportCenter = windowHeight / 2;
-      
       // Calculate how far the card has scrolled through the viewport
       const scrollProgress = Math.max(0, Math.min(1, 
         (windowHeight - rect.top) / (windowHeight + rect.height)
       ));
 
-      // Only trigger glow when card is significantly in view
-      if (scrollProgress > 0.2 && scrollProgress < 0.8) {
+      // Trigger glow when card is in view (much wider range)
+      if (scrollProgress > 0.15 && scrollProgress < 0.85) {
         // Map scroll progress to glow position (0 to 1, top to bottom of card)
-        const glowProgress = (scrollProgress - 0.2) / 0.6; // Normalize to 0-1
+        const glowProgress = (scrollProgress - 0.15) / 0.7; // Normalize to 0-1
         simulateGlowFromScroll(glowProgress);
       } else {
         card.classList.remove('animating');
       }
     };
 
-    // Throttle scroll events for performance
+    // Use requestAnimationFrame for smooth updates
     let ticking = false;
     const throttledScroll = () => {
       if (!ticking) {
-        requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
           handleScroll();
           ticking = false;
         });
@@ -183,11 +179,17 @@ const SpotlightCard = ({ children, className = '', spotlightColor = 'rgba(255, 2
     };
 
     window.addEventListener('scroll', throttledScroll, { passive: true });
+    window.addEventListener('resize', handleScroll, { passive: true });
     
-    // Initial check
+    // Initial check and delayed check for hydration
     handleScroll();
+    setTimeout(handleScroll, 100);
+    setTimeout(handleScroll, 500);
 
-    return () => window.removeEventListener('scroll', throttledScroll);
+    return () => {
+      window.removeEventListener('scroll', throttledScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
   }, [isMobile]);
 
   return (

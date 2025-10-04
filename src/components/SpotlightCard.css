@@ -140,15 +140,25 @@
 
 /* Mobile-specific adjustments for scroll-triggered glow */
 @media (max-width: 768px) {
-  .card-spotlight.animating::after,
-  .card-spotlight.animating > .glow-border {
-    opacity: calc((var(--pointer-distance) - var(--glow-sens)) / (100 - var(--glow-sens)));
-    transition: opacity 0.15s ease-out;
+  .card-spotlight.animating::after {
+    opacity: calc((var(--pointer-distance) - var(--glow-sens)) / (100 - var(--glow-sens))) !important;
+    transition: opacity 0.1s ease-out;
   }
   
-  /* Slightly more sensitive glow trigger on mobile */
+  .card-spotlight.animating > .glow-border {
+    opacity: calc((var(--pointer-distance) - var(--glow-sens)) / (100 - var(--glow-sens))) !important;
+    transition: opacity 0.1s ease-out;
+  }
+  
+  /* Much more sensitive glow trigger on mobile for better visibility */
   .card-spotlight {
-    --glow-sens: 25;
+    --glow-sens: 20;
+    --color-sens: 35;
+  }
+  
+  /* Force glow to show on mobile when animating */
+  .card-spotlight.animating > .glow-border::before {
+    opacity: 1;
   }
 }
 
