@@ -92,7 +92,7 @@ export default function ServicesSection() {
                   />
                 </div>
                 
-                <h3 className="text-2xl font-bold text-white mb-4 text-center">
+                <h3 className="text-2xl font-bold text-white mb-4 text-center service-card-title">
                   {service.title}
                 </h3>
                 <p className="text-gray-300 leading-relaxed flex-grow text-center">
