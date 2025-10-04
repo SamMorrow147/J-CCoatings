@@ -74,7 +74,7 @@ export default function SpraySection() {
   const sweepSpeed = 2400; // Same speed on all devices
   const color = "#ffffff";
   const dropletSize = 2.5; // Same size on all devices
-  const solidAnimationDuration = '1.0s'; // Same duration on all devices
+  const solidAnimationDuration = isMobile ? '0.5s' : '1.0s'; // 2x faster on mobile
   const canvasHeight = 240; // Same height on all devices
   const bandHeight = 120; // Same visible band on all devices
 
