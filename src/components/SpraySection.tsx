@@ -47,11 +47,14 @@ export default function SpraySection() {
     return () => observer.disconnect();
   }, [hasStarted]);
 
-  const flowRate = 80000; // Much higher flow rate for smooth coverage at speed
+  // Adjust settings for mobile
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+  const flowRate = isMobile ? 60000 : 80000; // Reduce flow rate on mobile for performance
   const nozzleRadius = 8; // Wider spray for better coverage
-  const sweepSpeed = 2400; // Even faster to keep up with solid animation
+  const sweepSpeed = isMobile ? 1200 : 2400; // Half speed on mobile (narrower screen)
   const color = "#ffffff"; // White spray
   const dropletSize = 2.5; // Smaller dots for smoother blend
+  const solidAnimationDuration = isMobile ? '2.0s' : '1.0s'; // Slower on mobile to match spray
 
   return (
     <div ref={sectionRef} style={{ fontFamily: "system-ui, sans-serif", margin: 0, padding: 0, display: 'flex', flexDirection: 'column' }}>
@@ -95,7 +98,7 @@ export default function SpraySection() {
           left: 0,
           height: '100%',
           background: '#ffffff', // White solid
-          animation: hasStarted ? 'revealLTR 1.0s linear 0.1s forwards' : 'none',
+          animation: hasStarted ? `revealLTR ${solidAnimationDuration} linear 0.1s forwards` : 'none',
           width: hasStarted ? '0%' : '0%'
         }}>
           <style jsx>{`

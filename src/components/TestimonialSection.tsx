@@ -92,11 +92,14 @@ export default function TestimonialSection() {
     return () => observer.disconnect();
   }, [hasStarted]);
 
-  const flowRate = 80000;
+  // Adjust settings for mobile
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+  const flowRate = isMobile ? 60000 : 80000; // Reduce flow rate on mobile for performance
   const nozzleRadius = 8;
-  const sweepSpeed = 2400;
+  const sweepSpeed = isMobile ? 1200 : 2400; // Half speed on mobile (narrower screen)
   const sprayColor = "#ffffff";
   const dropletSize = 2.5;
+  const solidAnimationDuration = isMobile ? '2.0s' : '1.0s'; // Slower on mobile to match spray
   
   const testimonials = [
     {
@@ -185,7 +188,7 @@ export default function TestimonialSection() {
           left: 0,
           height: '100%',
           background: '#ffffff',
-          animation: hasStarted ? 'revealLTR 1.0s linear 0.1s forwards' : 'none',
+          animation: hasStarted ? `revealLTR ${solidAnimationDuration} linear 0.1s forwards` : 'none',
           width: hasStarted ? '0%' : '0%'
         }}>
           <style jsx>{`
