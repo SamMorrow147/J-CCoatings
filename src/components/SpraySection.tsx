@@ -10,40 +10,38 @@ export default function SpraySection() {
   const [hasStarted, setHasStarted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const initialWidthSet = useRef(false);
 
   useEffect(() => {
-    // Set width and mobile state after hydration to avoid mismatch
+    // Set width ONCE and never change it on mobile
     const checkMobile = window.innerWidth <= 768;
     setIsMobile(checkMobile);
-    // Use document.documentElement.clientWidth to get accurate viewport width
-    const viewportWidth = Math.min(
-      window.innerWidth, 
-      document.documentElement.clientWidth,
-      document.body.clientWidth
-    );
-    setCanvasWidth(viewportWidth);
     
-    let resizeTimer: NodeJS.Timeout;
-    const handleResize = () => {
-      // Debounce resize to prevent it from firing during scroll
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        const mobile = window.innerWidth <= 768;
-        setIsMobile(mobile);
-        const viewportWidth = Math.min(
-          window.innerWidth, 
-          document.documentElement.clientWidth,
-          document.body.clientWidth
-        );
-        setCanvasWidth(viewportWidth);
-      }, 150);
-    };
+    if (!initialWidthSet.current) {
+      const viewportWidth = window.innerWidth;
+      setCanvasWidth(viewportWidth);
+      initialWidthSet.current = true;
+    }
     
-    window.addEventListener('resize', handleResize, { passive: true });
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      clearTimeout(resizeTimer);
-    };
+    // Only allow resize on desktop
+    if (!checkMobile) {
+      let resizeTimer: NodeJS.Timeout;
+      const handleResize = () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          const mobile = window.innerWidth <= 768;
+          if (!mobile) {
+            setCanvasWidth(window.innerWidth);
+          }
+        }, 200);
+      };
+      
+      window.addEventListener('resize', handleResize, { passive: true });
+      return () => {
+        window.removeEventListener('resize', handleResize);
+        clearTimeout(resizeTimer);
+      };
+    }
   }, []);
 
   // Start spray animation when section comes into view
@@ -96,7 +94,7 @@ export default function SpraySection() {
       {/* Top Spray Band - Only show top half */}
       <div style={{ 
         width: '100%', 
-        maxWidth: '100%',
+        maxWidth: '100vw',
         height: `${bandHeight}px`, 
         background: '#236292', 
         overflow: 'hidden', 
@@ -106,8 +104,8 @@ export default function SpraySection() {
           position: 'absolute', 
           top: 0, 
           left: 0, 
-          width: '100%',
-          maxWidth: '100%',
+          width: isMobile ? `${canvasWidth}px` : '100%',
+          maxWidth: '100vw',
           overflow: 'hidden'
         }}>
           <SprayFillCanvas
@@ -247,7 +245,7 @@ export default function SpraySection() {
       {/* Bottom Spray Band - Only show bottom half */}
       <div style={{ 
         width: '100%', 
-        maxWidth: '100%',
+        maxWidth: '100vw',
         height: `${bandHeight}px`, 
         background: '#236292', 
         overflow: 'hidden', 
@@ -257,8 +255,8 @@ export default function SpraySection() {
           position: 'absolute', 
           top: `-${bandHeight}px`, 
           left: 0, 
-          width: '100%',
-          maxWidth: '100%',
+          width: isMobile ? `${canvasWidth}px` : '100%',
+          maxWidth: '100vw',
           overflow: 'hidden'
         }}>
           <SprayFillCanvas

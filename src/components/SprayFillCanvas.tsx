@@ -132,8 +132,8 @@ const SprayFillCanvas = forwardRef<SprayFillHandle, SprayFillProps>(function Spr
     const baseDpr = window.devicePixelRatio || 1;
     const dpr = isMobile ? Math.min(1.5, baseDpr) : Math.max(1, baseDpr);
     
-    // Use the actual rendered width if smaller than specified width
-    const cssW = Math.min(width, canvas.parentElement?.clientWidth || width);
+    // Use fixed width/height - don't calculate dynamically
+    const cssW = width;
     const cssH = height;
     
     // Save current canvas content before resizing
@@ -330,13 +330,21 @@ const SprayFillCanvas = forwardRef<SprayFillHandle, SprayFillProps>(function Spr
   }, [resizeAndInit]);
 
   useEffect(() => {
+    // Disable resize listener on mobile - causes zoom issues
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) {
+      return; // Don't add resize listener on mobile at all
+    }
+    
     let resizeTimer: NodeJS.Timeout;
     const onResize = () => {
-      // Debounce resize to prevent excessive calls during scroll
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        resizeAndInit();
-      }, 150);
+      // Only respond to resize on desktop
+      if (window.innerWidth > 768) {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          resizeAndInit();
+        }, 200);
+      }
     };
     window.addEventListener("resize", onResize, { passive: true });
     return () => {
@@ -394,12 +402,12 @@ const SprayFillCanvas = forwardRef<SprayFillHandle, SprayFillProps>(function Spr
       style={{ 
         display: "block", 
         width: `${width}px`,
-        maxWidth: "100%",
+        maxWidth: "100vw",
         height: `${height}px`,
-        margin: "0 auto",
-        transform: "translateZ(0)", // Force GPU acceleration, prevent scaling issues
-        WebkitTransform: "translateZ(0)",
-        willChange: "auto" // Don't hint at transforms
+        transform: "translate3d(0,0,0)", // Force GPU layer without scaling
+        WebkitTransform: "translate3d(0,0,0)",
+        imageRendering: "auto",
+        position: "relative"
       }}
     />
   );
