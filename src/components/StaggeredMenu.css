@@ -35,9 +35,9 @@
 
 .sm-logo-img {
   display: block;
-  height: 60px;
+  height: 120px;
   width: auto;
-  max-width: 300px;
+  max-width: 600px;
   object-fit: contain;
 }
 
@@ -398,8 +398,8 @@
   }
   
   .sm-logo-img {
-    height: 32px;
-    max-width: 150px;
+    height: 64px;
+    max-width: 300px;
   }
   
   .sm-toggle {
@@ -428,7 +428,7 @@
   }
   
   .sm-logo-img {
-    height: 28px;
-    max-width: 120px;
+    height: 56px;
+    max-width: 240px;
   }
 }
