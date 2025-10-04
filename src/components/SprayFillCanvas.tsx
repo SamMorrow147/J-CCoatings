@@ -130,6 +130,18 @@ const SprayFillCanvas = forwardRef<SprayFillHandle, SprayFillProps>(function Spr
     const dpr = Math.max(1, window.devicePixelRatio || 1);
     const cssW = width;
     const cssH = height;
+    
+    // Save current canvas content before resizing
+    const tempCanvas = document.createElement('canvas');
+    const oldWidth = canvas.width;
+    const oldHeight = canvas.height;
+    tempCanvas.width = oldWidth;
+    tempCanvas.height = oldHeight;
+    const tempCtx = tempCanvas.getContext('2d')!;
+    if (oldWidth > 0 && oldHeight > 0) {
+      tempCtx.drawImage(canvas, 0, 0);
+    }
+    
     canvas.width = Math.floor(cssW * dpr);
     canvas.height = Math.floor(cssH * dpr);
     canvas.style.width = `${cssW}px`;
@@ -143,6 +155,11 @@ const SprayFillCanvas = forwardRef<SprayFillHandle, SprayFillProps>(function Spr
     ctx.fillStyle = background;
     ctx.fillRect(0, 0, cssW, cssH);
     ctx.restore();
+    
+    // Restore previous content if it existed (scaled to new size)
+    if (oldWidth > 0 && oldHeight > 0) {
+      ctx.drawImage(tempCanvas, 0, 0, oldWidth / dpr, oldHeight / dpr, 0, 0, cssW, cssH);
+    }
 
     // init nozzle position
     nozzleYRef.current = cssH * 0.5;
@@ -307,15 +324,13 @@ const SprayFillCanvas = forwardRef<SprayFillHandle, SprayFillProps>(function Spr
     };
   }, [resizeAndInit]);
 
-  // Disable resize handler to prevent canvas clearing on mobile scroll
-  // The canvas width is controlled by parent component state
-  // useEffect(() => {
-  //   const onResize = () => {
-  //     resizeAndInit();
-  //   };
-  //   window.addEventListener("resize", onResize);
-  //   return () => window.removeEventListener("resize", onResize);
-  // }, [resizeAndInit]);
+  useEffect(() => {
+    const onResize = () => {
+      resizeAndInit();
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [resizeAndInit]);
 
   // Imperative API
   useImperativeHandle(ref, () => ({
