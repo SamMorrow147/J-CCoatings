@@ -2,7 +2,7 @@
   --glow-sens: 30;
   --color-sens: calc(var(--glow-sens) + 20);
   --glow-color: 280deg 90% 70%;
-  --card-bg: linear-gradient(8deg, #111 75%, color-mix(in hsl, #111, white 2.5%) 75.5%);
+  --card-bg: linear-gradient(8deg, #11223d 75%, color-mix(in hsl, #11223d, white 2.5%) 75.5%);
   
   position: relative;
   border-radius: 1.5rem;

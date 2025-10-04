@@ -53,7 +53,7 @@ export default function LanyardSection() {
               animateBy="words"
               direction="top"
               as="h2"
-              className="text-white text-4xl font-bold mb-4"
+              className="text-white text-5xl font-bold mb-4"
               threshold={0.1}
               rootMargin="0px 0px -10% 0px"
               animationFrom={{ filter: "blur(10px)", opacity: 0, y: -20 }}
@@ -62,7 +62,7 @@ export default function LanyardSection() {
               style={{ width: '100%' }}
             />
             <p className="text-gray-300 text-lg mb-8 leading-relaxed">
-              Forward Minded Media is a full-service marketing agency, with the belief that marketing should be a true partnership, not just another expense. We help businesses leave the status quo behind by delivering creative, impactful solutions that drive real growth.
+              J&C Coatings is a professional painting company, with the belief that quality workmanship should be a true partnership, not just another service. We help property owners transform their spaces with expert painting and coating solutions that deliver lasting results.
             </p>
             
             {/* Button under text */}

@@ -1,6 +1,7 @@
 "use client";
 
 import Header from "@/components/Header";
+import SpraySection from "@/components/SpraySection";
 import LanyardSection from "@/components/LanyardSection";
 import TrueFocusSection from "@/components/TrueFocusSection";
 import ServicesSection from "@/components/ServicesSection";
@@ -43,19 +44,20 @@ export default function Home() {
         menuButtonColor="#fff"
         openMenuButtonColor="#000"
         changeMenuColorOnOpen={true}
-        colors={['#B19EEF', '#5227FF']}
-        logoUrl="/Logo-Dark.png"
-        accentColor="#5227FF"
+        colors={['#b8ea68', '#66b6ff', '#236292']}
+        logoUrl="/jc-coatings-logo.png"
+        accentColor="#b8ea68"
         onMenuOpen={() => console.log('Menu opened')}
         onMenuClose={() => console.log('Menu closed')}
       />
       
       <Header />
-      <LanyardSection />
-      <TrueFocusSection />
+      <SpraySection />
+      {/* <LanyardSection /> */}
+      {/* <TrueFocusSection /> */}
       <ServicesSection />
       <TestimonialSection />
-      <LogoSection />
+      {/* <LogoSection /> */}
       <Footer />
       
       {/* Global page-level blur effect at the bottom of the screen */}

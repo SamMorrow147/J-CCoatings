@@ -8,19 +8,23 @@ export default function Header() {
     <div className="relative h-[85vh] w-full bg-black">
       {/* Solid black background - using bg-black on the container itself */}
       
-      {/* Custom purple background layer behind interactive effect */}
-      <div className="absolute inset-0 z-0" style={{ backgroundColor: '#7c3f7b' }}></div>
+      {/* Custom blue background layer behind interactive effect */}
+      <div className="absolute inset-0 z-0" style={{ backgroundColor: '#236292' }}></div>
       
       {/* Liquid Ether effect layer - now on top but behind text */}
       <div className="absolute inset-0 z-10 animate-fade-in-background">
-        <LiquidEther resolution={0.4} isBounce={true} />
+        <LiquidEther 
+          resolution={0.4} 
+          isBounce={true} 
+          colors={['#66b6ff', '#b8ea68']}
+        />
       </div>
       
           {/* Content layer - with pointer-events-none to allow mouse through */}
           <header className="relative z-20 flex items-center justify-center h-full pointer-events-none">
             <div className="text-center">
               <SplitText
-                text="Today is the Day"
+                text="We Go Hard in the Motherfucking Paint"
                 tag="h1"
                 className="text-white text-6xl font-bold pointer-events-auto mb-4"
                 delay={75}
@@ -35,7 +39,7 @@ export default function Header() {
                 onLetterAnimationComplete={() => {}}
               />
               <p className="text-white/80 text-xl font-light tracking-wide opacity-0 animate-fade-in-delayed mb-8" style={{ fontFamily: '"halcom", sans-serif', fontWeight: 400, fontStyle: 'normal' }}>
-                Leave the status quo behind.
+                Professional painting services with attitude.
               </p>
               
               {/* Glassmorphism Let's Go Button */}

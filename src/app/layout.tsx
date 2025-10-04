@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Forward Minded Media",
-  description: "Leave the status quo behind with Forward Minded Media - your full-service marketing agency partner.",
+  title: "J&C Coatings",
+  description: "Professional painting and coating services - your trusted partner for quality finishes.",
   other: {
     'typekit-id': 'qhq4tmi',
   },
