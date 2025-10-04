@@ -8,27 +8,34 @@ export default function SpraySection() {
   const bottomRef = useRef<SprayFillHandle>(null);
   const [canvasWidth, setCanvasWidth] = useState(1920);
   const [hasStarted, setHasStarted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Set width after hydration to avoid mismatch
-    setCanvasWidth(window.innerWidth);
+    // Set width and mobile state after hydration to avoid mismatch
+    const checkMobile = window.innerWidth <= 768;
+    setIsMobile(checkMobile);
+    // Use document.documentElement.clientWidth to get accurate viewport width
+    const viewportWidth = Math.min(window.innerWidth, document.documentElement.clientWidth);
+    setCanvasWidth(viewportWidth);
     
     const handleResize = () => {
-      setCanvasWidth(window.innerWidth);
+      const mobile = window.innerWidth <= 768;
+      setIsMobile(mobile);
+      const viewportWidth = Math.min(window.innerWidth, document.documentElement.clientWidth);
+      setCanvasWidth(viewportWidth);
     };
     
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Start spray animation when section comes into view - keep observing
+  // Start spray animation when section comes into view
   useEffect(() => {
     if (!sectionRef.current) return;
 
-    // Use lower threshold for mobile devices
-    const isMobile = window.innerWidth <= 768;
-    const threshold = isMobile ? 0.1 : 0.7; // 10% on mobile, 70% on desktop
+    // Use lower threshold for mobile devices for earlier trigger
+    const threshold = isMobile ? 0.2 : 0.7;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -39,33 +46,57 @@ export default function SpraySection() {
           }, 200);
           setHasStarted(true);
         }
-        // Keep the spray visible - don't pause or clear when scrolling away
       },
       { threshold }
     );
 
     observer.observe(sectionRef.current);
     return () => observer.disconnect();
-  }, [hasStarted]);
+  }, [hasStarted, isMobile]);
 
-  // Adjust settings for mobile
-  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-  const flowRate = isMobile ? 60000 : 80000; // Reduce flow rate on mobile for performance
-  const nozzleRadius = 8; // Wider spray for better coverage
-  const sweepSpeed = isMobile ? 1200 : 2400; // Half speed on mobile (narrower screen)
-  const color = "#ffffff"; // White spray
-  const dropletSize = 2.5; // Smaller dots for smoother blend
-  const solidAnimationDuration = isMobile ? '0.6s' : '1.0s'; // Much faster on mobile
+  // Mobile-optimized settings: Much faster sweep, fewer particles
+  const flowRate = isMobile ? 25000 : 80000; // ~70% less particles on mobile
+  const nozzleRadius = isMobile ? 6 : 8; // Slightly tighter spray on mobile
+  const sweepSpeed = isMobile ? 3500 : 2400; // Much faster on mobile (~45% faster)
+  const color = "#ffffff";
+  const dropletSize = isMobile ? 2.0 : 2.5; // Slightly smaller droplets on mobile
+  const solidAnimationDuration = isMobile ? '0.5s' : '1.0s'; // Faster fill animation on mobile
+  const canvasHeight = isMobile ? 180 : 240; // Reduced canvas height on mobile
+  const bandHeight = isMobile ? 90 : 120; // Reduced visible band height on mobile
 
   return (
-    <div ref={sectionRef} style={{ fontFamily: "system-ui, sans-serif", margin: 0, padding: 0, display: 'flex', flexDirection: 'column' }}>
+    <div ref={sectionRef} style={{ 
+      fontFamily: "system-ui, sans-serif", 
+      margin: 0, 
+      padding: 0, 
+      display: 'flex', 
+      flexDirection: 'column',
+      width: '100%',
+      maxWidth: '100vw',
+      overflow: 'hidden',
+      position: 'relative'
+    }}>
       {/* Top Spray Band - Only show top half */}
-      <div style={{ width: '100%', height: '120px', background: '#236292', overflow: 'hidden', position: 'relative' }}>
-        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%' }}>
+      <div style={{ 
+        width: '100%', 
+        maxWidth: '100%',
+        height: `${bandHeight}px`, 
+        background: '#236292', 
+        overflow: 'hidden', 
+        position: 'relative' 
+      }}>
+        <div style={{ 
+          position: 'absolute', 
+          top: 0, 
+          left: 0, 
+          width: '100%',
+          maxWidth: '100%',
+          overflow: 'hidden'
+        }}>
           <SprayFillCanvas
             ref={topRef}
             width={canvasWidth}
-            height={240}
+            height={canvasHeight}
             color={color}
             background="#236292"
             flowRate={flowRate}
@@ -90,7 +121,10 @@ export default function SpraySection() {
         background: '#236292',
         position: 'relative',
         overflow: 'hidden',
-        minHeight: '500px'
+        width: '100%',
+        maxWidth: '100%',
+        minHeight: isMobile ? '400px' : '500px',
+        padding: isMobile ? '40px 20px' : '80px 40px'
       }}>
         {/* Animated color box */}
         <div style={{ 
@@ -98,7 +132,7 @@ export default function SpraySection() {
           top: 0,
           left: 0,
           height: '100%',
-          background: '#ffffff', // White solid
+          background: '#ffffff',
           animation: hasStarted ? `revealLTR ${solidAnimationDuration} linear 0.1s forwards` : 'none',
           width: hasStarted ? '0%' : '0%'
         }}>
@@ -111,17 +145,28 @@ export default function SpraySection() {
         </div>
 
         {/* Content */}
-        <div style={{ position: 'relative', zIndex: 10, maxWidth: '1200px', textAlign: 'center', padding: '80px 40px' }}>
+        <div style={{ 
+          position: 'relative', 
+          zIndex: 10, 
+          maxWidth: isMobile ? '600px' : '1200px', 
+          textAlign: 'center'
+        }}>
           <h2 style={{ 
-            fontSize: '3.5rem', 
+            fontSize: isMobile ? '2rem' : '3.5rem', 
             fontWeight: '900', 
-            margin: '0 0 24px 0', 
+            margin: isMobile ? '0 0 16px 0' : '0 0 24px 0', 
             color: '#236292',
-            fontFamily: '"proxima-nova", sans-serif'
+            fontFamily: '"proxima-nova", sans-serif',
+            lineHeight: '1.2'
           }}>
             Quality Craftsmanship
           </h2>
-          <p style={{ fontSize: '1.5rem', color: '#1a4d6b', lineHeight: '1.6', margin: '0 0 40px 0' }}>
+          <p style={{ 
+            fontSize: isMobile ? '1rem' : '1.5rem', 
+            color: '#1a4d6b', 
+            lineHeight: '1.6', 
+            margin: isMobile ? '0 0 28px 0' : '0 0 40px 0' 
+          }}>
             Every project starts with precision and ends with perfection. Our professional painting services bring your vision to life with expert application and attention to detail.
           </p>
           
@@ -182,12 +227,26 @@ export default function SpraySection() {
       </div>
 
       {/* Bottom Spray Band - Only show bottom half */}
-      <div style={{ width: '100%', height: '120px', background: '#236292', overflow: 'hidden', position: 'relative' }}>
-        <div style={{ position: 'absolute', top: '-120px', left: 0, width: '100%' }}>
+      <div style={{ 
+        width: '100%', 
+        maxWidth: '100%',
+        height: `${bandHeight}px`, 
+        background: '#236292', 
+        overflow: 'hidden', 
+        position: 'relative' 
+      }}>
+        <div style={{ 
+          position: 'absolute', 
+          top: `-${bandHeight}px`, 
+          left: 0, 
+          width: '100%',
+          maxWidth: '100%',
+          overflow: 'hidden'
+        }}>
           <SprayFillCanvas
             ref={bottomRef}
             width={canvasWidth}
-            height={240}
+            height={canvasHeight}
             color={color}
             background="#236292"
             flowRate={flowRate}

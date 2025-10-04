@@ -129,6 +129,14 @@
     font-style: normal;
     overflow-x: hidden;
     max-width: 100vw;
+    width: 100%;
+    position: relative;
+  }
+  
+  /* Ensure canvas elements don't cause overflow */
+  canvas {
+    max-width: 100% !important;
+    display: block;
   }
   
   /* Proxima Nova Extrabold for all titles */

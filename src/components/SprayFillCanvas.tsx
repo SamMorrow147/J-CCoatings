@@ -127,8 +127,13 @@ const SprayFillCanvas = forwardRef<SprayFillHandle, SprayFillProps>(function Spr
 
   const resizeAndInit = React.useCallback(() => {
     const canvas = canvasRef.current!;
-    const dpr = Math.max(1, window.devicePixelRatio || 1);
-    const cssW = width;
+    // Cap DPR on mobile devices to improve performance
+    const isMobile = window.innerWidth <= 768;
+    const baseDpr = window.devicePixelRatio || 1;
+    const dpr = isMobile ? Math.min(1.5, baseDpr) : Math.max(1, baseDpr);
+    
+    // Use the actual rendered width if smaller than specified width
+    const cssW = Math.min(width, canvas.parentElement?.clientWidth || width);
     const cssH = height;
     
     // Save current canvas content before resizing
@@ -378,7 +383,13 @@ const SprayFillCanvas = forwardRef<SprayFillHandle, SprayFillProps>(function Spr
     <canvas
       ref={canvasRef}
       className={className}
-      style={{ display: "block", width, height }}
+      style={{ 
+        display: "block", 
+        width: `${width}px`,
+        maxWidth: "100%",
+        height: `${height}px`,
+        margin: "0 auto"
+      }}
     />
   );
 });
