@@ -9,44 +9,44 @@ export default function ServicesSection() {
     {
       title: "Residential",
       description: "Transform your home with our expert residential painting services. From single rooms to entire houses, we deliver beautiful, lasting finishes that enhance your living space and protect your investment.",
-      spotlightColor: "rgba(59, 130, 246, 0.2)", // Blue
+      spotlightColor: "rgba(184, 234, 104, 0.25)", // Green
       icon: "residential" as const,
-      iconColor: "#3B82F6"
+      iconColor: "#b8ea68"
     },
     {
       title: "Commercial",
       description: "Professional painting solutions for businesses of all sizes. We work efficiently to minimize disruption while delivering high-quality results that reflect your brand and create welcoming spaces for customers and employees.",
-      spotlightColor: "rgba(168, 85, 247, 0.2)", // Purple
+      spotlightColor: "rgba(184, 234, 104, 0.25)", // Green
       icon: "commercial" as const,
-      iconColor: "#A855F7"
+      iconColor: "#b8ea68"
     },
     {
       title: "Interior",
       description: "Bring new life to your interior spaces with our meticulous interior painting services. We use premium paints and proven techniques to create flawless finishes that stand the test of time.",
-      spotlightColor: "rgba(34, 197, 94, 0.2)", // Green
+      spotlightColor: "rgba(184, 234, 104, 0.25)", // Green
       icon: "interior" as const,
-      iconColor: "#22C55E"
+      iconColor: "#b8ea68"
     },
     {
       title: "Exterior",
       description: "Protect and beautify your property's exterior with our durable painting solutions. We handle all surfaces and weather conditions to ensure a stunning, long-lasting finish that boosts curb appeal.",
-      spotlightColor: "rgba(249, 115, 22, 0.2)", // Orange
+      spotlightColor: "rgba(184, 234, 104, 0.25)", // Green
       icon: "exterior" as const,
-      iconColor: "#F97316"
+      iconColor: "#b8ea68"
     },
     {
       title: "Decks",
       description: "Restore and protect your deck with our specialized deck staining and sealing services. We prepare surfaces properly and use quality products to ensure your deck looks great and withstands the elements.",
-      spotlightColor: "rgba(236, 72, 153, 0.2)", // Pink
+      spotlightColor: "rgba(184, 234, 104, 0.25)", // Green
       icon: "decks" as const,
-      iconColor: "#EC4899"
+      iconColor: "#b8ea68"
     },
     {
       title: "Power Washing",
       description: "Prepare surfaces for painting or simply refresh your property's appearance with our professional power washing services. We safely remove dirt, mildew, and grime to reveal clean, like-new surfaces.",
-      spotlightColor: "rgba(14, 165, 233, 0.2)", // Cyan
+      spotlightColor: "rgba(184, 234, 104, 0.25)", // Green
       icon: "powerwashing" as const,
-      iconColor: "#0EA5E9"
+      iconColor: "#b8ea68"
     }
   ];
 
@@ -66,6 +66,7 @@ export default function ServicesSection() {
             rootMargin="0px 0px -10% 0px"
             animationFrom={{ filter: "blur(10px)", opacity: 0, y: -20 }}
             animationTo={[{ filter: "blur(0px)", opacity: 1, y: 0 }]}
+            onAnimationComplete={() => {}}
           />
           <p className="text-xl text-gray-400 max-w-3xl mx-auto">
             Professional painting and coating services designed to protect and beautify your property.
